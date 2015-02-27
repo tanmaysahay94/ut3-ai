@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 import random
 
 inf = 1e20
@@ -16,6 +17,7 @@ class Player14:
         blal,
         block_stat,
         ):
+
         cells = []
         for idb in blal:
             id1 = idb / 3
@@ -40,6 +42,7 @@ class Player14:
         move_by_opponent,
         flag,
         ):
+
         if move_by_opponent[0] == -1 and move_by_opponent[1] == -1:
             return [(4, 4)]
         for_corner = [
@@ -118,7 +121,78 @@ class Player14:
         # returns a list of tuples (a, b) where a is the state of the game and b is a tuple, i.e., the move we are making
 
         generatedChildren = []
+        allowedMoves = allowed_moves(node)
+        for (i, j) in allowedMoves:
+            tempNode = node
+            update_lists(tempNode)
+            generateChildren.append(tempNode)
         return generatedChildren
+
+    def update_lists(
+        game_board,
+        block_stat,
+        move_ret,
+        fl,
+        ):
+
+    # move_ret has the move to be made, so we modify the game_board, and then check if we need to modify block_stat
+
+        game_board[move_ret[0]][move_ret[1]] = fl
+
+        block_no = move_ret[0] / 3 * 3 + move_ret[1] / 3
+        id1 = block_no / 3
+        id2 = block_no % 3
+        mg = 0
+        mflg = 0
+        if block_stat[block_no] == '-':
+            if game_board[id1 * 3][id2 * 3] == game_board[id1 * 3
+                    + 1][id2 * 3 + 1] and game_board[id1 * 3 + 1][id2
+                    * 3 + 1] == game_board[id1 * 3 + 2][id2 * 3 + 2] \
+                and game_board[id1 * 3 + 1][id2 * 3 + 1] != '-':
+                mflg = 1
+            if game_board[id1 * 3 + 2][id2 * 3] == game_board[id1 * 3
+                    + 1][id2 * 3 + 1] and game_board[id1 * 3 + 1][id2
+                    * 3 + 1] == game_board[id1 * 3][id2 * 3 + 2] \
+                and game_board[id1 * 3 + 1][id2 * 3 + 1] != '-':
+                mflg = 1
+
+            if mflg != 1:
+                for i in range(id2 * 3, id2 * 3 + 3):
+                    if game_board[id1 * 3][i] == game_board[id1 * 3
+                            + 1][i] and game_board[id1 * 3 + 1][i] \
+                        == game_board[id1 * 3 + 2][i] \
+                        and game_board[id1 * 3][i] != '-':
+                        mflg = 1
+                        break
+
+                # ## row-wise
+
+            if mflg != 1:
+                for i in range(id1 * 3, id1 * 3 + 3):
+                    if game_board[i][id2 * 3] == game_board[i][id2 * 3
+                            + 1] and game_board[i][id2 * 3 + 1] \
+                        == game_board[i][id2 * 3 + 2] \
+                        and game_board[i][id2 * 3] != '-':
+                        mflg = 1
+                        break
+
+        if mflg == 1:
+            block_stat[block_no] = fl
+
+        # check for draw on the block.
+
+        id1 = block_no / 3
+        id2 = block_no % 3
+        cells = []
+        for i in range(id1 * 3, id1 * 3 + 3):
+            for j in range(id2 * 3, id2 * 3 + 3):
+                if game_board[i][j] == '-':
+                    cells.append((i, j))
+
+        if cells == [] and mflg != 1:
+            block_stat[block_no] = 'd'  # Draw
+
+        return
 
     def isTerminal(self, node):
         game_board = node[0]
@@ -132,12 +206,16 @@ class Player14:
             and bs[0] != '-' or bs[1] != 'd' and bs[1] == bs[4] \
             and bs[4] == bs[7] and bs[4] != '-' or bs[2] != 'd' \
             and bs[2] == bs[5] and bs[5] == bs[8] and bs[5] != '-':
+
     # # Col win
+
             return (True, 'W')
         elif bs[0] == bs[4] and bs[4] == bs[8] and bs[0] != '-' \
             and bs[0] != 'd' or bs[2] == bs[4] and bs[4] == bs[6] \
             and bs[2] != '-' and bs[2] != 'd':
+
     # # Diag win
+
             return (True, 'W')
         else:
             smfl = 0
@@ -148,12 +226,16 @@ class Player14:
                         smfl = 1
                         break
             if smfl == 1:
+
                         # Game is still on!
+
                 return (False, 'Continue')
             else:
+
                         # Changed scoring mechanism
                         # 1. If there is a tie, player with more boxes won, wins.
                         # 2. If no of boxes won is the same, player with more corner move, wins.
+
                 point1 = 0
                 point2 = 0
                 for i in block_stat:
@@ -239,3 +321,7 @@ class Player14:
                 if beta <= alpha:
                     break
             return (v, move_to_return)
+
+
+
+			
