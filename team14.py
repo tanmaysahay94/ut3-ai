@@ -1,23 +1,13 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 import random
 
 inf = 1e20
 
-
 class Player14:
-
     def __init__(self):
         pass
 
-    def get_empty_out_of(
-        self,
-        gameb,
-        blal,
-        block_stat,
-        ):
-
+    def get_empty_out_of(self, gameb, blal, block_stat):
         cells = []
         for idb in blal:
             id1 = idb / 3
@@ -35,27 +25,11 @@ class Player14:
                         cells.append((i, j))
         return cells
 
-    def allowed_moves(
-        self,
-        current_board_game,
-        board_stat,
-        move_by_opponent,
-        flag,
-        ):
-
+    def allowed_moves(self, current_board_game, board_stat, move_by_opponent, flag):
         if move_by_opponent[0] == -1 and move_by_opponent[1] == -1:
             return [(4, 4)]
-        for_corner = [
-            0,
-            2,
-            3,
-            5,
-            6,
-            8,
-            ]
-
+        for_corner = [0,2,3,5,6,8]
         # list of permitted blocks based on old move
-
         blocks_allowed = []
         mod = [[0, 3, 6], [1, 4, 7], [2, 5, 8]]
         (x, y) = move_by_opponent
@@ -86,28 +60,13 @@ class Player14:
                 blocks_allowed, board_stat)
         return cells
 
-    def move(
-        self,
-        current_board_game,
-        board_stat,
-        move_by_opponent,
-        flag,
-        ):
-
+    def move(self, current_board_game, board_stat, move_by_opponent, flag):
         # current_board_game is 2-D 9x9 with char 'o', 'x', '-'
         # board_stat is 1-D 9-size with char 'o', 'x', '-'
         # move by opponent is a tuple (p, q)
         # flag is a character which tells me whether I'm 'x' or 'o'
-
         node = (current_game_board, board_stat, move_by_opponent, flag)
-        ret = self.alphaBetaPruning(
-            node,
-            4,
-            -inf,
-            inf,
-            True,
-            flag,
-            )
+        ret = self.alphaBetaPruning(node, 4, -inf, inf, True, flag)
         my_move = ret[1]
         return my_move
 
@@ -185,15 +144,7 @@ class Player14:
     def heuristic(self, node):
         pass
 
-    def alphaBetaPruning(
-        self,
-        node,
-        depth,
-        alpha,
-        beta,
-        maximizingPlayer,
-        flg,
-        ):
+    def alphaBetaPruning(self, node, depth, alpha, beta, maximizingPlayer, flg):
         # returns a tuple (a, b) where a is the heuristic value and b is the move, which itself is a tuple
         if depth == 0 or self.isTerminal(node)[0]:
             return (self.heuristic(node), node[2])
@@ -201,14 +152,7 @@ class Player14:
             v = -inf
             children = self.getChildren(node, flg)
             for (child, move) in children:
-                tmp = self.alphaBetaPruning(
-                    child,
-                    depth - 1,
-                    alpha,
-                    beta,
-                    False,
-                    self.getOpp(flg),
-                    )
+                tmp = self.alphaBetaPruning(child, depth - 1, alpha, beta, False, self.getOpp(flg))
                 if tmp[0] > v:
                     v = tmp[0]
                 if alpha < v:
@@ -221,14 +165,7 @@ class Player14:
             v = inf
             children = self.getChildren(node, self.getOpp(flg))
             for child in children:
-                tmp = self.alphaBetaPruning(
-                    child,
-                    depth - 1,
-                    alpha,
-                    beta,
-                    True,
-                    flg,
-                    )
+                tmp = self.alphaBetaPruning(child, depth - 1, alpha, beta, True, flg)
                 if tmp[0] < v:
                     v = tmp[0]
                 if beta > v:
