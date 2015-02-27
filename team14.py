@@ -43,6 +43,15 @@ class Player14:
                 blocks_allowed.remove(i)
 
         cells = get_empty_out_of(current_board_game, blocks_allowed, board_stat)
+
+        my_move = cells[0]
+        best_val = -1
+        for cell in cells:
+            val = evaluate(current_board_game, cell, board_stat)
+            if val > best_val:
+                val = best_val
+                my_move = cell
+        return my_move
 #       return cells[random.randrange(len(cells))]
 
 def get_empty_out_of(gameb, blal, block_stat):
@@ -54,7 +63,6 @@ def get_empty_out_of(gameb, blal, block_stat):
             for j in range(id2 * 3, id2 * 3 + 3):
                 if gameb[i][j] == '-':
                     cells.append((i, j))
-
     if cells == []:
         for i in range(9):
             for j in range(9):
