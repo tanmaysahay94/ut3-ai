@@ -64,9 +64,13 @@ class Player14:
         # board_stat is 1-D 9-size with char 'o', 'x', '-'
         # move by opponent is a tuple (p, q)
         # flag is a character which tells me whether I'm 'x' or 'o'
-        node = (current_game_board, board_stat, move_by_opponent)
+        crrnt_brd_gm = current_board_game[:]
+        brd_stt = board_stat[:]
+        mv_by_ppnnt = move_by_opponent[:]
+        node = (crrnt_brd_gm, brd_stt, mv_by_ppnnt)
         ret = self.alphaBetaPruning(node, 4, -inf, inf, True, flag)
         my_move = ret[1]
+        print my_move[0], my_move[1]
         return my_move
 
     def getOpp(self, flg):
@@ -83,7 +87,7 @@ class Player14:
             x, y = move
             tmp_board, tmp_bstat, tmp_opp_move = node
             tmp_board[x][y] = flag
-            tmp_bstat = self.getbstat(tmp_bstat, tmp_board, move, flag)
+ #           tmp_bstat = self.getbstat(tmp_bstat, tmp_board, move, flag)
             tmp_opp_move = move
             generatedChildren.append((tmp_board, tmp_bstat, tmp_opp_move))
         return generatedChildren
@@ -113,6 +117,7 @@ class Player14:
     def isTerminal(self, node):
         game_board = node[0]
         bs = node[1]
+        block_stat = bs
         if bs[0] == bs[1] and bs[1] == bs[2] and bs[1] != '-' and bs[1] \
             != 'd' or bs[3] != 'd' and bs[3] != '-' and bs[3] == bs[4] \
             and bs[4] == bs[5] or bs[6] != 'd' and bs[6] != '-' \
@@ -133,8 +138,7 @@ class Player14:
             smfl = 0
             for i in range(9):
                 for j in range(9):
-                    if game_board[i][j] == '-' and block_stat[i / 3 * 3
-                            + j / 3] == '-':
+                    if game_board[i][j] == '-' and block_stat[i / 3 * 3 + j / 3] == '-':
                         smfl = 1
                         break
             if smfl == 1:
@@ -173,7 +177,7 @@ class Player14:
                         return (True, 'D')
 
     def heuristic(self, node):
-        pass
+        return random.randint(1, 100)
 
     def alphaBetaPruning(self, node, depth, alpha, beta, maximizingPlayer, flg):
         # returns a tuple (a, b) where a is the heuristic value and b is the move, which itself is a tuple

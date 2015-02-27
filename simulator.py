@@ -1,6 +1,9 @@
 import sys
 import random
 import signal
+import team14
+
+inf = 1e20
 
 #Timer handler, helper function
 
@@ -379,7 +382,7 @@ def decide_winner_and_get_message(player,status, message):
 	elif player == 'P2' and status == 'W':
 		return ('P2',message)
 	else:
-		return ('NONE','DRAW')
+		return ('NO ONE','DRAW')
 	return
 
 
@@ -422,7 +425,7 @@ def simulate(obj1,obj2):
 	MESSAGE = ''
 
         #Make your move in 6 seconds!
-	TIMEALLOWED = 360
+	TIMEALLOWED = 60
 
 	print_lists(game_board, block_stat)
 
@@ -508,7 +511,7 @@ def simulate(obj1,obj2):
 		old_move = ret_move_pl2
 		print_lists(game_board, block_stat)
 	
-	print WINNER
+	print WINNER + " won!"
 	print MESSAGE
 
 if __name__ == '__main__':
@@ -534,6 +537,12 @@ if __name__ == '__main__':
 	elif option == '3':
 		obj1 = Manual_player()
 		obj2 = Manual_player()
+        elif option == '4':
+                obj1 = team14.Player14()
+                obj2 = Manual_player()
+        elif option == '5':
+                obj1 = team14.Player14()
+                obj2 = Player1()
         
         # Deciding player1 / player2 after a coin toss
         # However, in the tournament, each player will get a chance to go 1st. 
