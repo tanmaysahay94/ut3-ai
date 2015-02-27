@@ -83,10 +83,32 @@ class Player14:
             x, y = move
             tmp_board, tmp_bstat, tmp_opp_move = node
             tmp_board[x][y] = flag
-            tmp_bstat = self.getbstat(tmp_bstat, tmp_board)
+            tmp_bstat = self.getbstat(tmp_bstat, tmp_board, move, flag)
             tmp_opp_move = move
             generatedChildren.append((tmp_board, tmp_bstat, tmp_opp_move))
         return generatedChildren
+
+    def getbstat(self, board_stat, board, move, flag):
+        ret_board_stat = board_stat
+        x, y = move
+        p, q = x/3, y/3
+        cell = 3 * p + q
+        if ret_board_stat[cell] != '-':
+            return ret_board_stat
+        else:
+            base_x = 3 * p
+            base_y = 3 * q
+            f = flag
+            if ((board[base_x][base_y] == f and board[base_x][base_y+1] == f and board[base_x][base_y+2] == f) or \
+                    (board[base_x+1][base_y] == f and board[base_x+1][base_y+1] == f and board[base_x+1][base_y+2] == f) or \
+                    (board[base_x+2][base_y] == f and board[base_x+2][base_y+1] == f and board[base_x+2][base_y+2] == f) or \
+                    (board[base_x][base_y] == f and board[base_x+1][base_y] == f and board[base_x+2][base_y] == f) or \
+                    (board[base_x][base_y+1] == f and board[base_x+1][base_y+1] == f and board[base_x+2][base_y+1] == f) or \
+                    (board[base_x][base_y+2] == f and board[base_x+1][base_y+2] == f and board[base_x+2][base_y+2] == f) or \
+                    (board[base_x][base_y] == f and board[base_x+1][base_y+1] == f and board[base_x+2][base_y+2] == f) or \
+                    (board[base_x+2][base_y] == f and board[base_x+1][base_y+1] == f and board[base_x][base_y+2] == f)):
+                ret_board_stat[cell] = f
+            return ret_board_stat
 
     def isTerminal(self, node):
         game_board = node[0]
