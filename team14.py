@@ -28,7 +28,7 @@ class Player14:
     def allowed_moves(self, current_board_game, board_stat, move_by_opponent, flag):
         if move_by_opponent[0] == -1 and move_by_opponent[1] == -1:
             return [(4, 4)]
-        for_corner = [0,2,3,5,6,8]
+        for_corner = [0, 2, 3, 5, 6, 8]
         # list of permitted blocks based on old move
         blocks_allowed = []
         mod = [[0, 3, 6], [1, 4, 7], [2, 5, 8]]
@@ -56,8 +56,7 @@ class Player14:
         for i in reversed(blocks_allowed):
             if board_stat[i] != '-':
                 blocks_allowed.remove(i)
-        cells = self.get_empty_out_of(current_board_game,
-                blocks_allowed, board_stat)
+        cells = self.get_empty_out_of(current_board_game, blocks_allowed, board_stat)
         return cells
 
     def move(self, current_board_game, board_stat, move_by_opponent, flag):
@@ -65,7 +64,7 @@ class Player14:
         # board_stat is 1-D 9-size with char 'o', 'x', '-'
         # move by opponent is a tuple (p, q)
         # flag is a character which tells me whether I'm 'x' or 'o'
-        node = (current_game_board, board_stat, move_by_opponent, flag)
+        node = (current_game_board, board_stat, move_by_opponent)
         ret = self.alphaBetaPruning(node, 4, -inf, inf, True, flag)
         my_move = ret[1]
         return my_move
@@ -76,8 +75,18 @@ class Player14:
         return 'o'
 
     def getChildren(self, node, flag):
-        # returns a list of tuples (a, b) where a is the state of the game and b is a tuple, i.e., the move we are making
+        # returns a list of children where type(child) == node
         generatedChildren = []
+        child_board, child_bstat, child_opp_move = node
+        possible_moves = self.allowed_moves(child_board, child_bstat, child_opp_move, flag)
+        for move in possible_moves:
+            x, y = move
+            tmp_board, tmp_bstat, tmp_opp_move = node
+            tmp_board[x][y] = flag
+            tmp_bstat = self.getbstat(tmp_bstat, tmp_board)
+            tmp_opp_move = move
+            generatedChildren.append((tmp_board, tmp_bstat, tmp_opp_move))
+        return generatedChildren
 
     def isTerminal(self, node):
         game_board = node[0]
@@ -151,7 +160,7 @@ class Player14:
         if maximizingPlayer:
             v = -inf
             children = self.getChildren(node, flg)
-            for (child, move) in children:
+            for child in children:
                 tmp = self.alphaBetaPruning(child, depth - 1, alpha, beta, False, self.getOpp(flg))
                 if tmp[0] > v:
                     v = tmp[0]
