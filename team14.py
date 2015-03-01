@@ -31,6 +31,7 @@ class Player14(object):
                     idx = cell
                 current_board_game[cell[0]][cell[1]] = '-'
             my_move = idx
+            print "sahay ", flag
             return my_move
 
     def getOpp(self, flag):

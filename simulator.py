@@ -2,6 +2,8 @@ import sys
 import random
 import signal
 from team14 import *
+from team91 import *
+from team69 import *
 
 inf = 1e20
 
@@ -542,6 +544,15 @@ if __name__ == '__main__':
                 obj2 = Manual_player()
         elif option == '5':
                 obj1 = Player14()
+                obj2 = Player1()
+        elif option == '6':
+                obj1 = Player14()
+                obj2 = Player()
+        elif option == '7':
+                obj1 = Player()
+                obj2 = Player1()
+        elif option == '8':
+                obj1 = Player69()
                 obj2 = Player1()
         
         # Deciding player1 / player2 after a coin toss
