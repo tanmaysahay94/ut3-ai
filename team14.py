@@ -7,8 +7,7 @@ class Player14(object):
 
     def __init__(self):
         self.inf = 1e10
-        self.Threes = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
-        self.HeuristicArray = [[0, -10, -100, -1000], [10, 0, 0], [100, 0], [1000]]
+        self.generateHeuristicMatrix()
 
     def move(self, current_board_game, board_stat, move_by_opponent, flag):
         if move_by_opponent == (-1, -1):
@@ -20,7 +19,7 @@ class Player14(object):
         idx = possible_cells[0]
         best_val = -self.inf
         depth = 0
-        while best_val != inf and self.node_count < 10000:
+        while best_val != inf and self.node_count < 100000:
             depth += 1
             best_val = -self.inf
             for cell in possible_cells:
@@ -148,7 +147,7 @@ class Player14(object):
         return True
 
     def getUtilityVal(self, board_stat):
-        for i in self.Threes:
+        for i in self.representative_three_matrix:
             myCount = 0
             otherCount = 0
             for j in i:
@@ -164,7 +163,7 @@ class Player14(object):
 
     def getHeuristicVal(self, board_game, board_stat):
         heuristic = 0
-        for i in self.Threes:
+        for i in self.representative_three_matrix:
             myCount = 0
             otherCount = 0
             for j in i:
@@ -172,20 +171,24 @@ class Player14(object):
                     myCount += 1
                 elif board_stat[j] == self.other:
                     otherCount += 1
-            heuristic += 100 * self.HeuristicArray[myCount][otherCount]
+            heuristic += 100 * self.heuristic_value_matrix[myCount][otherCount]
         for i in xrange(0, 3):
             for j in xrange(0, 3):
                 if board_stat[3 * i + j] != '-':
                     continue
-                for Threes in self.Threes:
+                for representative_three_matrix in self.representative_three_matrix:
                     myCount = 0
                     otherCount = 0
-                    for idx in Threes:
+                    for idx in representative_three_matrix:
                         r = 3 * i + idx/3
                         c = 3 * j + idx%3
                         if board_game[r][c] == self.myMark:
                             myCount += 1
                         elif board_game[r][c] == self.other:
                             otherCount += 1
-                    heuristic += self.HeuristicArray[myCount][otherCount]
+                    heuristic += self.heuristic_value_matrix[myCount][otherCount]
         return heuristic
+
+    def generateHeuristicMatrix(self):
+        self.representative_three_matrix = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+        self.heuristic_value_matrix = [[0, -10, -100, -1000], [10, 0, 0], [100, 0], [1000]]
