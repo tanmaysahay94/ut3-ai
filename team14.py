@@ -1,3 +1,6 @@
+"""
+Python implementation of Alpha Beta Pruning AI algorithm
+"""
 import random
 import copy
 
