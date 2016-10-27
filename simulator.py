@@ -1,3 +1,10 @@
+"""
+A Python simuation of Ultimate Tic Tac Toe
+Player 2 - AI test player 1 
+Player 1 - AI test player 2
+Manual   - Manual user player
+"""
+
 import sys
 import random
 import signal
